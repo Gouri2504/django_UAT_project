@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilization Analytic Tool</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        h1 {
+            font-size: 60px;
+            font-weight: bold;
+            margin-top: 5px;
+            color: maroon;
+        }
+
+        .box {
+            
+                margin-top: 20px;
+                margin-left: 20;
+                margin-right: 20;
+                padding: 10px;
+                border-radius: 10px;
+                text-align: left;
+                border-block: 3px solid; 
+                border-style: solid;
+            }
+        
+
+        .cyan-box {
+            background-color: lightcyan;
+            
+        }
+
+        .light-blue-box {
+            background-color: lightblue;
+        }
+
+        .green-button {
+            background-color: maroon;
+            color: white;
+            padding: 15px 20px;
+            font-size: 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        .download-button {
+            background-color: light;
+            color: blue;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .file-name {
+            flex-grow: 1;
+            padding: 5px;
+        }
+
+        .browse-button {
+            background-color: #D35400  ;
+            color: white;
+            padding: 6px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .action-button {
+            background-color: #33042e;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        #result-booking,
+        #result-utilized {
+            margin-top: 15px;
+            font-size: 18px;
+        }
+        
+        /* New styles for date selectors and dropdowns */
+        .location-selector,
+        .department-selector,
+        #labcar-selector {
+            margin-top: 10px;
+            margin-right: 10px;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: "Arial", 'Helvetica';
+        }
+    </style>
+</head>
+<body>
+    <h1>Utilization Analytic Tool</h1>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <!-- New Dropdowns for Location and Department -->
+  <select id="location-selector" class="location-selector" onchange="updateDepartments()">
+        <option value="BAN">BAN</option>
+        <option value="COB">COB</option>
+    </select>
+    <select id="department-selector" class="department-selector" onchange="updateLabcars()">
+        
+        <!--<option value="ECB">ECB</option>
+        <option value="ECC">ECC</option>
+        <option value="ECD">ECD</option>
+        <option value="EEV">EEV</option>
+        <option value="ECJ">ECJ</option>
+        <option value="ECU">ECU</option>
+        <option value="EEA">EEA</option>
+        <option value="EEP">EEP</option>
+        <option value="EME">EME</option>
+        <option value="EMR">EMR</option>
+        <option value="EPE">EPE</option>
+        <option value="EPJ">EPJ</option>
+        <option value="EPK">EPK</option>
+        <option value="EPV">EPV</option>
+        <option value="ENC">ENC</option>
+        <option value="EPS">EPS</option>
+        <option value="EFV">EFV</option>-->
+        
+    </select>
+
+    <!-- New Dropdown for Labcar names -->
+    <select id="labcar-selector" class="labcar-selector">
+    <!--    <option value="LCPT01">LCPT 01</option>
+        <option value="LCPT02">LCPT 02</option>
+        <option value="LCPT03">LCPT 03</option>
+        <option value="LCPT04">LCPT 04</option>
+        <option value="LCPT05">LCPT 05</option>
+        <option value="LCPT06">LCPT 06</option>
+        <option value="LCPT07">LCPT 07</option>
+        <option value="LCPT08">LCPT 08</option>
+        <option value="LCPT09">LCPT 09</option>
+        <option value="LCPT10">LCPT 10</option>
+        <option value="LCPT11">LCPT 11</option>
+        <option value="LCPT12">LCPT 12</option>        
+        <option value="LCPT14">LCPT 14</option>
+        <option value="LCPT15">LCPT 15</option>
+        <option value="LCPT16">LCPT 16</option>
+        <option value="LCPT17">LCPT 17</option>
+        <option value="LCPT18">LCPT 18</option>
+        <option value="LCPT19">LCPT 19</option>
+        <option value="LCPT20">LCPT 20</option>
+        <option value="LCPT21">LCPT 21</option>
+        <option value="LCPT22">LCPT 22</option>
+        <option value="LCPT23">LCPT 23</option>
+        <option value="LCPT24">LCPT 24</option>
+        <option value="LCPT25">LCPT 25</option>
+        <option value="LCPT26">LCPT 26</option>
+        <option value="LCPT27">LCPT 27</option>
+        <option value="LCPT28">LCPT 28</option>
+        <option value="LCPT29">LCPT 29</option>
+        <option value="LCPT30">LCPT 30</option>
+        <option value="LCPT31">LCPT 31</option>
+        <option value="LCPT32">LCPT 32</option>
+        <option value="LCPT33">LCPT 33</option>
+        <option value="LCPT34">LCPT 34</option>       
+        <option value="LCPT36">LCPT 36</option>
+        <option value="LCPT37">LCPT 37</option>
+        <option value="LCPT38">LCPT 38</option>
+        <option value="LCPT39">LCPT 39</option>
+        <option value="LCPT40">LCPT 40</option>
+        <option value="LCPT41">LCPT 41</option>
+        <option value="LCPT42">LCPT 42</option>
+        <option value="LCPT43">LCPT 43</option>
+        <option value="LCPT44">LCPT 44</option>
+        <option value="LCPT45">LCPT 45</option>
+        <option value="LCPT46">LCPT 46</option>
+        <option value="LCPT47">LCPT 47</option>
+        <option value="LCPT48">LCPT 48</option>
+        <option value="LCPT49">LCPT 49</option>
+        <option value="LCPT50">LCPT 50</option>
+        <option value="LCPT51">LCPT 51</option>
+        <option value="LCPT52">LCPT 52</option>
+        <option value="LCPT53">LCPT 53</option>
+        <option value="LCPT54">LCPT 54</option>
+        <option value="LCPT56">LCPT 56</option>
+        <option value="LCPT57">LCPT 57</option>
+        <option value="LCPT58">LCPT 58</option>
+        <option value="LCPT59">LCPT 59</option>
+        <option value="LCPT60">LCPT 60</option>
+        <option value="LCPT61">LCPT 61</option>
+        <option value="LCPT62">LCPT 62</option>
+        <option value="LCPT63">LCPT 63</option>
+        <option value="LCPT64">LCPT 64</option>
+        <option value="LCPT65">LCPT 65</option>
+        <option value="LCPT66">LCPT 66</option>
+        <option value="LCPT67">LCPT 67</option>
+        <option value="LCPT68">LCPT 68</option>
+        <option value="LCPT69">LCPT 69</option>
+        <option value="LCPT70">LCPT 70</option>
+        <option value="LCPT71">LCPT 71</option>
+        <option value="LCPT72">LCPT 72</option>
+        <option value="LCPTCOB1">LCPT COB 1 </option>
+        <option value="LCPTCOB2">LCPT COB 2</option>
+        <option value="LCPTCOB3">LCPT COB 3</option>
+        <option value="LCPTCOB4">LCPT COB 4</option>
+        <option value="LCPTCOB5">LCPT COB 5 </option>
+        <option value="LCPTCOB6">LCPT COB 6</option>
+        <option value="LCPTCOB7">LCPT COB 7</option>
+        <option value="LCPTCOB8">LCPT COB 8</option>
+        <option value="LCPTCOB9">LCPT COB 9 </option>
+        <option value="LCPTCOB10">LCPT COB 10</option>
+        <option value="LCPTCOB11">LCPT COB 11</option>
+        <option value="LCPTCOB12">LCPT COB 12</option>
+        <option value="LCPTCOB13">LCPT COB 13 </option>
+        <option value="LCPTCOB14">LCPT COB 14</option>
+        <option value="LCPTCOB15">LCPT COB 15</option>
+        <option value="LCPTCOB16">LCPT COB 16</option>
+        <option value="LCPTCOB17">LCPT COB 17 </option>
+        <option value="LCPTCOB18">LCPT COB 18</option>
+        <option value="LCPTCOB19">LCPT COB 19</option>
+        <option value="LCPTCOB20">LCPT COB 20</option>
+        <option value="LCPTCOB21">LCPT COB 21</option>
+        <option value="LCPTCOB22">LCPT COB 22</option>
+        <option value="LCPTCOB23">LCPT COB 23 </option>
+        <option value="LCPTCOB24">LCPT COB 24</option>
+        <option value="LCPTCOB25">LCPT COB 25</option>
+        <option value="LCPTCOB26">LCPT COB 26</option>
+        <option value="LCPTCOB27">LCPT COB 27</option>
+        <option value="LCPTCOB28">LCPT COB 28</option>
+        <option value="LCPTCOB29">LCPT COB 29 </option>
+        <option value="LCPTCOB30">LCPT COB 30</option>
+        <option value="LCPTCOB31">LCPT COB 31</option>
+        <option value="LCPTCOB32">LCPT COB 32</option>
+        <option value="LCPTCOB33">LCPT COB 33</option>
+        <option value="LCPTCOB34">LCPT COB 34</option>
+        <option value="LCPTCOB35">LCPT COB 35 </option>
+        <option value="LCPTCOB36">LCPT COB 36</option>
+        <option value="LCPTCOB37">LCPT COB 37</option>
+        <option value="LCPTCOB38">LCPT COB 38</option>
+        <option value="LCPTCOB39">LCPT COB 39</option>
+        <option value="LCPTCOB40">LCPT COB 40</option>
+        <option value="LCPTCOB41">LCPT COB 41 </option>
+        <option value="LCPTCOB42">LCPT COB 42</option>
+        <option value="LCPTCOB43">LCPT COB 43</option>
+        <option value="LCPTCOB44">LCPT COB 44</option>
+        <option value="LCPTCOB45">LCPT COB 45</option>
+        <option value="LCPTCOB46">LCPT COB 46 </option>
+        <option value="LCPTCOB47">LCPT COB 47</option>
+        <option value="LCPTCOB48">LCPT COB 48</option>
+        <option value="LCPTCOB49">LCPT COB 49</option>
+        <option value="LCPTCOB50">LCPT COB 50</option>
+        <option value="LCPTCOB51">LCPT COB 51 </option>
+        <option value="LCPTCOB52">LCPT COB 52</option>
+        <option value="LCPTCOB53">LCPT COB 53</option>
+        <option value="LCPTCOB54">LCPT COB 54</option>-->
+
+
+        <!-- Add more labcars as needed -->
+    </select>
+
+    <!-- New Date Range Selector -->
+    <input type="date" id="start-date" class="location-selector" placeholder="Start Date">
+    <input type="date" id="end-date" class="location-selector" placeholder="End Date">
+
+    <!-- New Dropdown for Months -->
+    <select id="month-selector" class="location-selector">
+        <option value="Monthly">Monthly</option>
+        <option value="Quarterly">Quarterly</option>
+        <option value="Halfyearly">Half Yearly</option>
+        <option value="Annually">Annually</option>
+        <!--option value="May">May</option>
+        <option value="June">June</option>
+        <option value="July">July</option>
+        <option value="August">August</option>
+        <option value="September">September</option>
+        <option value="October">October</option>
+        <option value="November">November</option>
+        <option value="December">December</option>-->
+    </select>
+
+    <!-- First Box - TFMS File -->
+    <div class="box cyan-box">
+        <h2 style="font-weight: bold; font-size: 25px;">TFMS Data Upload</h2>
+
+        <div class="file-input-container">
+            <input type="text" id="file-name-tfms" class="file-name" readonly placeholder="No file selected">
+            <label for="file-input-tfms" class="browse-button" onclick="document.getElementById('file-input-tfms').click()">Choose File</label>
+            <input type="file" id="file-input-tfms" onchange="displayFileName('file-input-tfms', 'file-name-tfms')" style="display:none" />
+        </div>
+
+        <button class="action-button" onclick="calculateTotalBookingHours()">Booking Hours</button>
+
+        <!-- Display result below Calculate button -->
+        <div id="result-booking"></div>
+    </div>
+
+    <!-- Second Box - WBU File -->
+    <div class="box light-blue-box">
+        <h2 style="font-weight: bold; font-size: 25px;">WBU Data Upload</h2>
+
+        <div class="file-input-container">
+            <input type="text" id="file-name-wbu" class="file-name" readonly placeholder="No file selected">
+            <label for="file-input-wbu" class="browse-button" onclick="document.getElementById('file-input-wbu').click()">Choose File</label>
+            <input type="file" id="file-input-wbu" onchange="displayFileName('file-input-wbu', 'file-name-wbu')" style="display:none" />
+        </div>
+
+        <button class="action-button" onclick="displayTotalUtilizedHours()">Utilization Hours</button>
+
+        <!-- Display result below Display button -->
+        <div id="result-utilized"></div>
+    </div>
+
+    <button class="green-button" onclick="plotData()">Plot Data</button>
+    <!-- New Difference button -->
+    <button class="green-button" onclick="calculateDifference()">Difference</button>
+    <!-- New div for displaying the difference -->
+<div id="difference-result" style="margin-top: 10px; font-size: 18px;"></div>
+    <div id="chart-container">
+        <canvas id="plot-chart"></canvas>
+    </div>
+    <div id="result"></div>
+
+    <!-- New Download button -->
+    <button class="download-button" onclick="downloadData()">Download</button>
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+   
+     //   var locationData = {
+      //      'BAN': ['EPV', 'ECC', 'ECU', 'EPJ', 'EEP', 'EME', 'EEV', 'ECB', 'EPK', 'ECC', 'ECJ', 'EEA', 'EMR', 'ECD', 'EFV'],
+      //      'COB': ['EPV', 'ECU', 'EPJ', 'EEP', 'EME', 'EEV', 'ECB', 'EPK', 'ECC','ECJ','EEA','EMR','ECD','ENC','EFV']
+      //      // Add more entries as needed
+      //  };
+      //  var departmentData = {
+      //      'EFV': ['LCPTCOB2', 'LCPTCOB6','LCPTCOB12','LCPTCOB18','LCPTCOB24','LCPTCOB25','LCPTCOB26','LCPTCOB28','LCPTCOB31','LCPTCOB32','LCPTCOB34'],
+      //      'EEV': ['labcar3', 'labcar4'],
+      //      'department3': ['labcar5', 'labcar6'],
+      //      'department4': ['labcar7', 'labcar8']
+      /      // Add more entries as needed
+      //  };-->
+      <script>
+        function updateDepartments() {
+            var locationSelector = document.getElementById('location-selector');
+            console.log('Selected location:', locationSelector.value);
+            var departmentSelector = document.getElementById('department-selector');
+
+            // Reset the department selector
+            departmentSelector.innerHTML = '';
+
+            // Add departments based on the selected location
+            switch (locationSelector.value) {
+                case 'BAN':
+                    addOption(departmentSelector, 'EPV', 'EPV');
+                    addOption(departmentSelector, 'ECC', 'ECC');
+                    addOption(departmentSelector, 'ECJ', 'ECJ');
+                    addOption(departmentSelector, 'EEA', 'EEA');
+                    addOption(departmentSelector, 'EMR', 'EMR');
+                    addOption(departmentSelector, 'ECD', 'ECD');
+                    addOption(departmentSelector, 'EEV', 'EEV');
+                    addOption(departmentSelector, 'ECU', 'ECU');
+                    addOption(departmentSelector, 'EPJ', 'EPJ');
+                    addOption(departmentSelector, 'EEP', 'EEP');
+                    addOption(departmentSelector, 'EME', 'EME');
+                    addOption(departmentSelector, 'ECB', 'ECB');
+                    addOption(departmentSelector, 'EPK', 'EPK');
+                    addOption(departmentSelector, 'EFV', 'EFV');
+                    addOption(departmentSelector, 'ENC', 'ENC');          
+                    
+                    break;
+                case 'COB':
+                    addOption(departmentSelector, 'EPV', 'EPV');
+                    addOption(departmentSelector, 'ECC', 'ECC');
+                    addOption(departmentSelector, 'ECJ', 'ECJ');
+                    addOption(departmentSelector, 'EEA', 'EEA');
+                    addOption(departmentSelector, 'EMR', 'EMR');
+                    addOption(departmentSelector, 'ECD', 'ECD');
+                    addOption(departmentSelector, 'EEV', 'EEV');
+                    addOption(departmentSelector, 'ECU', 'ECU');
+                    addOption(departmentSelector, 'EPJ', 'EPJ');
+                    addOption(departmentSelector, 'EEP', 'EEP');
+                    addOption(departmentSelector, 'EME', 'EME');
+                    addOption(departmentSelector, 'ECB', 'ECB');
+                    addOption(departmentSelector, 'EPK', 'EPK');
+                    addOption(departmentSelector, 'EFV', 'EFV');
+                    addOption(departmentSelector, 'ENC', 'ENC');
+                    break;
+                // Add more cases as needed
+            }
+
+            // Update labcars based on the selected department
+            updateLabcars();
+        }
+
+        // New function to update labcars based on the selected department
+        function updateLabcars() {
+            var departmentSelector = document.getElementById('department-selector');
+            console.log('Selected department:', departmentSelector.value);
+
+            var labcarSelector = document.getElementById('labcar-selector');
+
+            // Reset the labcar selector
+            labcarSelector.innerHTML = '';
+
+            // Add labcars based on the selected department
+            switch (departmentSelector.value) {
+                case 'EPV':
+                    addOption(labcarSelector, 'labcar1', 'LCPT-BAN-01');
+                    addOption(labcarSelector, 'labcar2', 'LCPT-BAN-04');
+                    addOption(labcarSelector, 'labcar3', 'LCPT-BAN-09');
+                    addOption(labcarSelector, 'labcar4', 'LCPT-BAN-10');
+                    addOption(labcarSelector, 'labcar5', 'LCPT-BAN-17');
+                    addOption(labcarSelector, 'labcar6', 'LCPT-BAN-25');
+                    addOption(labcarSelector, 'labcar7', 'LCPT-BAN-30');
+                    addOption(labcarSelector, 'labcar8', 'LCPT-BAN-52');
+                    addOption(labcarSelector, 'labcar9', 'LCPT-BAN-70');
+                    addOption(labcarSelector, 'labcarC1', 'LCPT-COB-02');
+                    addOption(labcarSelector, 'labcarC2', 'LCPT-COB-06');
+                    addOption(labcarSelector, 'labcarC3', 'LCPT-COB-12');
+                    addOption(labcarSelector, 'labcarC4', 'LCPT-COB-18');
+                    addOption(labcarSelector, 'labcarC5', 'LCPT-COB-24');
+                    addOption(labcarSelector, 'labcarC6', 'LCPT-COB-26');
+                    addOption(labcarSelector, 'labcarC7', 'LCPT-COB-28');  
+                    addOption(labcarSelector, 'labcarC8', 'LCPT-COB-31');
+                    addOption(labcarSelector, 'labcarC9', 'LCPT-COB-32');
+                    addOption(labcarSelector, 'labcarC10', 'LCPT-COB-34');
+                    break;
+                case 'ECU':
+                    addOption(labcarSelector, 'labcar10', 'LCPT-BAN-02');
+                    addOption(labcarSelector, 'labcar11', 'LCPT-BAN-12');
+                    addOption(labcarSelector, 'labcar12', 'LCPT-BAN-16');
+                    addOption(labcarSelector, 'labcar13', 'LCPT-BAN-22');
+                    addOption(labcarSelector, 'labcar14', 'LCPT-BAN-43');
+                    addOption(labcarSelector, 'labcar15', 'LCPT-BAN-67');
+                    addOption(labcarSelector, 'labcarC11', 'LCPT-COB-03');  
+                    addOption(labcarSelector, 'labcarC12', 'LCPT-COB-04');
+                    addOption(labcarSelector, 'labcarC13', 'LCPT-COB-13');
+                    addOption(labcarSelector, 'labcarC14', 'LCPT-COB-17');
+                    
+                    break;
+                case 'EEV':
+                    addOption(labcarSelector, 'labcar16', 'LCPT-BAN-07');
+                    addOption(labcarSelector, 'labcar17', 'LCPT-BAN-15');
+                    addOption(labcarSelector, 'labcar18', 'LCPT-BAN-39');
+                    addOption(labcarSelector, 'labcar19', 'LCPT-BAN-60');
+                    addOption(labcarSelector, 'labcar20', 'LCPT-BAN-62');
+                    addOption(labcarSelector, 'labcar21', 'LCPT-BAN-71');
+                    addOption(labcarSelector, 'labcarC21', 'LCPT-COB-08');
+                    addOption(labcarSelector, 'labcarC22', 'LCPT-COB-21');
+                    addOption(labcarSelector, 'labcarC23', 'LCPT-COB-29');
+                    addOption(labcarSelector, 'labcarC24', 'LCPT-COB-42');
+                    
+                    break;
+                case 'EPJ':
+                   
+                    addOption(labcarSelector, 'labcar24', 'LCPT-BAN-03');
+                    addOption(labcarSelector, 'labcar25', 'LCPT-BAN-14');
+                    addOption(labcarSelector, 'labcar26', 'LCPT-BAN-20');
+                    addOption(labcarSelector, 'labcar27', 'LCPT-BAN-21');
+                    addOption(labcarSelector, 'labcar28', 'LCPT-BAN-26');
+                    addOption(labcarSelector, 'labcar29', 'LCPT-BAN-27');
+                    addOption(labcarSelector, 'labcar30', 'LCPT-BAN-28');
+                    addOption(labcarSelector, 'labcar31', 'LCPT-BAN-31');
+                    addOption(labcarSelector, 'labcar32', 'LCPT-BAN-40');
+                    addOption(labcarSelector, 'labcar33', 'LCPT-BAN-46');
+                    addOption(labcarSelector, 'labcar34', 'LCPT-BAN-47');
+                    addOption(labcarSelector, 'labcarC15', 'LCPT-COB-05');  
+                    addOption(labcarSelector, 'labcarC16', 'LCPT-COB-11');
+                    addOption(labcarSelector, 'labcarC17', 'LCPT-COB-15');
+                    addOption(labcarSelector, 'labcarC18', 'LCPT-COB-19');
+                    addOption(labcarSelector, 'labcarC19', 'LCPT-COB-33');
+                    addOption(labcarSelector, 'labcarC20', 'LCPT-COB-36');
+
+                    
+                    break;
+                case 'ECB':
+                    
+                    addOption(labcarSelector, 'labcar35', 'LCPT-BAN-11');
+                    addOption(labcarSelector, 'labcar36', 'LCPT-BAN-29');
+                    addOption(labcarSelector, 'labcar37', 'LCPT-BAN-34');
+                    addOption(labcarSelector, 'labcar38', 'LCPT-BAN-38');
+                    addOption(labcarSelector, 'labcar39', 'LCPT-BAN-44');
+                    addOption(labcarSelector, 'labcar40', 'LCPT-BAN-49');
+                    addOption(labcarSelector, 'labcarC26', 'LCPT-COB-16');  
+                    addOption(labcarSelector, 'labcarC27', 'LCPT-COB-20');
+                    addOption(labcarSelector, 'labcarC28', 'LCPT-COB-27');
+                    addOption(labcarSelector, 'labcarC29', 'LCPT-COB-35');
+                    addOption(labcarSelector, 'labcarC30', 'LCPT-COB-40');
+                    addOption(labcarSelector, 'labcarC31', 'LCPT-COB-43');
+                    break;
+                    
+                case 'ECJ':
+                    addOption(labcarSelector, 'labcar41', 'LCPT-BAN-32');
+                    addOption(labcarSelector, 'labcar42', 'LCPT-BAN-37');
+                    addOption(labcarSelector, 'labcar43', 'LCPT-BAN-42');
+                    addOption(labcarSelector, 'labcar44', 'LCPT-BAN-48');
+                    addOption(labcarSelector, 'labcar45', 'LCPT-BAN-50');
+                    addOption(labcarSelector, 'labcar46', 'LCPT-BAN-57');
+                    addOption(labcarSelector, 'labcar47', 'LCPT-BAN-63');
+                    addOption(labcarSelector, 'labcar48', 'LCPT-BAN-64');
+                    addOption(labcarSelector, 'labcar49', 'LCPT-BAN-65');
+                    addOption(labcarSelector, 'labcar50', 'LCPT-BAN-66');
+                    addOption(labcarSelector, 'labcarC27', 'LCPT-COB-14');
+                    addOption(labcarSelector, 'labcarC32', 'LCPT-COB-45');
+                    addOption(labcarSelector, 'labcarC33', 'LCPT-COB-39');
+                    addOption(labcarSelector, 'labcarC34', 'LCPT-COB-49');
+                    addOption(labcarSelector, 'labcarC35', 'LCPT-COB-50');
+                    break;
+                case 'EEP':
+                    addOption(labcarSelector, 'labcar51', 'LCPT-BAN-05');
+                    addOption(labcarSelector, 'labcar52', 'LCPT-BAN-08');
+                    addOption(labcarSelector, 'labcar53', 'LCPT-BAN-24');
+                    
+                    break;
+                case 'EME':
+                    addOption(labcarSelector, 'labcar54', 'LCPT-BAN-06');
+                    addOption(labcarSelector, 'labcar55', 'LCPT-BAN-18');
+                    addOption(labcarSelector, 'labcar56', 'LCPT-BAN-51');
+                    
+                    break;
+                    
+                case 'EPK':
+                    addOption(labcarSelector, 'labcar63', 'LCPT-BAN-19');
+                    addOption(labcarSelector, 'labcar64', 'LCPT-BAN-45');
+                    addOption(labcarSelector, 'labcar65', 'LCPT-BAN-54');
+                    addOption(labcarSelector, 'labcar66', 'LCPT-BAN-59');
+                    
+                    
+                    break;
+                case 'ECC':
+                    addOption(labcarSelector, 'labcar67', 'LCPT-BAN-36');
+                    addOption(labcarSelector, 'labcar68', 'LCPT-BAN-56');
+                    
+                    break;
+
+                case 'EMR':
+                    addOption(labcarSelector, 'labcar69', 'LCPT-BAN-53');
+                    addOption(labcarSelector, 'labcar70', 'LCPT-BAN-68');
+                    addOption(labcarSelector, 'labcar71', 'LCPT-BAN-02');
+                    break;
+                case 'EEA':
+                    addOption(labcarSelector, 'labcar72', 'LCPT-BAN-41');
+                    break;
+
+                case 'EPS':
+                    addOption(labcarSelector, 'labcar73', 'LCPT-BAN-33');
+                    addOption(labcarSelector, 'labcar74', 'LCPT-BAN-58');
+                    addOption(labcarSelector, 'labcar75', 'LCPT-BAN-61');
+                    break;
+                
+                case 'ECD':
+                    addOption(labcarSelector, 'labcarC36', 'LCPT-COB-01');
+                    addOption(labcarSelector, 'labcarC37', 'LCPT-COB-07');
+                    addOption(labcarSelector, 'labcarC38', 'LCPT-COB-22');
+                    addOption(labcarSelector, 'labcarC39', 'LCPT-COB-23');
+                    addOption(labcarSelector, 'labcarC40', 'LCPT-COB-38');
+                    addOption(labcarSelector, 'labcarC41', 'LCPT-COB-41');
+                    addOption(labcarSelector, 'labcarC42', 'LCPT-COB-44');
+                    addOption(labcarSelector, 'labcarC43', 'LCPT-COB-46');
+                    addOption(labcarSelector, 'labcarC44', 'LCPT-COB-47');
+                    addOption(labcarSelector, 'labcarC45', 'LCPT-COB-48');
+                    addOption(labcarSelector, 'labcarC46', 'LCPT-COB-51');
+                    addOption(labcarSelector, 'labcarC47', 'LCPT-COB-52');
+                    addOption(labcarSelector, 'labcarC48', 'LCPT-COB-53');
+                    addOption(labcarSelector, 'labcarC49', 'LCPT-COB-54');
+                    break;
+
+                case 'ENC':
+                    addOption(labcarSelector, 'labcarC50', 'LCPT-COB-09');
+                    addOption(labcarSelector, 'labcarC51', 'LCPT-COB-10');
+                    break;
+                    // Add more cases as needed
+            }
+        }
+
+        // Helper function to add an option to a selector
+        function addOption(selector, value, text) {
+            var option = document.createElement('option');
+            option.value = value;
+            option.text = text;
+            selector.add(option);
+        }
+   
+        function displayFileName(inputId, displayId) {
+            var fileInput = document.getElementById(inputId);
+            var fileNameDisplay = document.getElementById(displayId);
+            fileNameDisplay.value = fileInput.files[0] ? fileInput.files[0].name : "No file selected";
+        }
+
+        function displayTotalUtilizedHours() {
+            var wbuFileInput = document.getElementById('file-input-wbu');
+            var wbuFile = wbuFileInput.files[0];
+
+            if (!wbuFile) {
+                alert('Please upload the WBU file.');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('wbu_file', wbuFile);
+
+            fetch('', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.total_utilized_hours !== null) {
+                    document.getElementById('result-utilized').textContent = "Total Utilized Hours is: " + data.total_utilized_hours.toFixed(2);
+                } else {
+                    alert('Error calculating total utilized hours.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function calculateTotalBookingHours() {
+            var tfmsFileInput = document.getElementById('file-input-tfms');
+            var tfmsFile = tfmsFileInput.files[0];
+
+            if (!tfmsFile) {
+                alert('Please upload the TFMS file.');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('tfms_file', tfmsFile);
+
+            fetch('', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.total_booking_hours !== null) {
+                    document.getElementById('result-booking').textContent = "Total Booking Hours is: " + data.total_booking_hours.toFixed(2);
+                } else {
+                    alert('Error calculating total booking hours.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function plotData() {
+            var tfmsFileInput = document.getElementById('file-input-tfms');
+            var wbuFileInput = document.getElementById('file-input-wbu');
+    
+            // Check if both files are uploaded
+            if (!tfmsFileInput.files[0] || !wbuFileInput.files[0]) {
+                alert('Please upload both TFMS and WBU files for plotting.');
+                return;
+            }
+    
+            var formDataTFMS = new FormData();
+            var formDataWBU = new FormData();
+    
+            formDataTFMS.append('tfms_file', tfmsFileInput.files[0]);
+            formDataWBU.append('wbu_file', wbuFileInput.files[0]);
+    
+            fetch('', {  // Assuming your URL for the upload_file view is ''
+                method: 'POST',
+                body: formDataTFMS
+            })
+            .then(response => response.json())
+            .then(dataTFMS => {
+                if (dataTFMS.total_booking_hours !== null) {
+                    fetch('', {  // Assuming your URL for the upload_file view is ''
+                        method: 'POST',
+                        body: formDataWBU
+                    })
+                    .then(response => response.json())
+                    .then(dataWBU => {
+                        if (dataWBU.total_utilized_hours !== null) {
+                            // Create a bar graph
+                            var ctx = document.getElementById('plot-chart').getContext('2d');
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: ['Total TFMS Booked Hours', 'Total WBU Utilized Hours'],
+                                    datasets: [{
+                                        label: 'TFMS',
+                                        backgroundColor: '#007BFF',
+                                        data: [dataTFMS.total_booking_hours, 0]  // TFMS data for Total Booked, 0 for Total Utilized
+                                    }, {
+                                        label: 'WBU',
+                                        backgroundColor: '#00CED1',
+                                        data: [0, dataWBU.total_utilized_hours]  // 0 for Total Booked, WBU data for Total Utilized
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            title: {
+                                                display: true,
+                                                text: 'Number of Hours',  // Set Y-axis label
+                                                fontSize: 20,  // Set the font size for Y-axis label
+                                                fontWeight: 'bold'  // Make the Y-axis label bold
+                                            }
+                                        }
+                                    },
+                                    plugins: {
+                                        legend: {
+                                            labels: {
+                                                fontSize: 20,
+                                                fontWeight: 'bold'
+                                            }
+                                        }
+                                    }
+
+                                }
+                            });
+                            // Show the chart container
+                        document.getElementById('chart-container').style.display = 'block';
+                        } else {
+                            alert('Error retrieving WBU data for plotting.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    alert('Error retrieving TFMS data for plotting.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function calculateDifference() {
+            var tfmsFileInput = document.getElementById('file-input-tfms');
+            var wbuFileInput = document.getElementById('file-input-wbu');
+        
+            var tfmsFile = tfmsFileInput.files[0];
+            var wbuFile = wbuFileInput.files[0];
+        
+            if (!tfmsFile || !wbuFile) {
+                alert('Please upload both TFMS and WBU files.');
+                return;
+            }
+        
+            var formDataTFMS = new FormData();
+            var formDataWBU = new FormData();
+        
+            formDataTFMS.append('tfms_file', tfmsFile);
+            formDataWBU.append('wbu_file', wbuFile);
+        
+            fetch('', {
+                method: 'POST',
+                body: formDataTFMS
+            })
+            .then(response => response.json())
+            .then(dataTFMS => {
+                if (dataTFMS.total_booking_hours !== null) {
+                    fetch('', {
+                        method: 'POST',
+                        body: formDataWBU
+                    })
+                    .then(response => response.json())
+                    .then(dataWBU => {
+                        if (dataWBU.total_utilized_hours !== null) {
+                            var difference = Math.abs(dataTFMS.total_booking_hours - dataWBU.total_utilized_hours);
+        
+                            // Check if the difference is a valid number
+                            if (!isNaN(difference)) {
+                                // Update the content of the difference result div
+                                document.getElementById('difference-result').textContent = "Difference is: " + difference.toFixed(2) + " hours";
+                            } else {
+                                alert('Error calculating difference. Please check your data.');
+                            }
+                        } else {
+                            alert('Error calculating total utilized hours for WBU.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    alert('Error calculating total booking hours for TFMS.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        
+        function downloadData() {
+            var labcar = document.getElementById('labcar-selector').value;
+            var startDate = document.getElementById('start-date').value;
+            var endDate = document.getElementById('end-date').value;
+            var month = document.getElementById('month-selector').value;
+            var totalBookingHours = parseFloat(document.getElementById('result-booking').textContent.match(/\d+\.\d+/)[0]);
+            var totalUtilizedHours = parseFloat(document.getElementById('result-utilized').textContent.match(/\d+\.\d+/)[0]);
+        
+            // Create a worksheet with the data
+            var worksheet = XLSX.utils.aoa_to_sheet([
+                ["Labcar", "Date Range", "Month", "Total Booking Hours", "Total Utilized Hours"],
+                [labcar, `${startDate} to ${endDate}`, month, totalBookingHours, totalUtilizedHours]
+            ]);
+        
+            // Create a workbook and add the worksheet
+            var workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Utilization Data");
+        
+            // Save the workbook to a file
+            var filename = "utilization_data.xlsx";
+            XLSX.writeFile(workbook, filename);
+        
+            // Optional: Show an alert with the data
+            var downloadMessage = `
+                Labcar: ${labcar}
+                Date Range: ${startDate} to ${endDate}
+                Month: ${month}
+                Total Booking Hours: ${totalBookingHours}
+                Total Utilized Hours: ${totalUtilizedHours}
+            `;
+        
+            alert(downloadMessage);
+        }
+        
+    </script>
+</body>
+</html>

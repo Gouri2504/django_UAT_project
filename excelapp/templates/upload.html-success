@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilization Analytic Tool</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        h1 {
+            font-size: 50px;
+            font-weight: bold;
+            margin-top: 5px;
+            color:#33042E;
+        }
+
+        .box {
+            
+                margin-top: 20px;
+                margin-left: 20;
+                margin-right: 20;
+                padding: 10px;
+                border-radius: 10px;
+                text-align: left;
+                border-block: 3px solid;
+                border-style: solid;
+            }
+        
+
+        .cyan-box {
+            background-color: light;
+            
+        }
+
+        .light-blue-box {
+            background-color: light;
+        }
+
+        .green-button {
+            background-color: maroon;
+            color: white;
+            padding: 15px 20px;
+            font-size: 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        .download-button {
+            background-color: light;
+            color: blue;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .file-name {
+            flex-grow: 1;
+            padding: 5px;
+        }
+
+        .browse-button {
+            background-color: #D35400 ;
+            color: white;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .action-button {
+            background-color: #33042E;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        #result-booking,
+        #result-utilized {
+            margin-top: 15px;
+            font-size: 18px;
+        }
+        
+        /* New styles for date selectors and dropdowns */
+        .date-selector,
+        #labcar-selector,
+        #month-selector {
+            margin-top: 10px;
+            margin-right: 10px;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            font-family:"Arial",'Helvetica';
+        }
+    </style>
+</head>
+<body>
+    <h1>Utilization Analytic Tool</h1>
+
+    <!-- New Dropdown for Labcar names -->
+    <select id="labcar-selector" class="date-selector">
+        <option value="labcar1">Labcar 1</option>
+        <option value="labcar2">Labcar 2</option>
+        <option value="labcar3">Labcar 3</option>
+        <!-- Add more labcars as needed -->
+    </select>
+
+    <!-- New Date Range Selector -->
+    <input type="date" id="start-date" class="date-selector" placeholder="Start Date">
+    <input type="date" id="end-date" class="date-selector" placeholder="End Date">
+
+    <!-- New Dropdown for Months -->
+    <select id="month-selector" class="date-selector">
+        <option value="January">January</option>
+        <option value="February">February</option>
+        <option value="March">March</option>
+        <option value="April">April</option>
+        <option value="May">May</option>
+        <option value="June">June</option>
+        <option value="July">July</option>
+        <option value="August">August</option>
+        <option value="September">September</option>
+        <option value="October">October</option>
+        <option value="November">November</option>
+        <option value="December">December</option>
+    </select>
+
+    <!-- First Box - TFMS File -->
+    <div class="box cyan-box">
+        <h2 style="font-weight: bold; font-size: 25px;">TFMS File</h2>
+
+        <div class="file-input-container">
+            <input type="text" id="file-name-tfms" class="file-name" readonly placeholder="No file selected">
+            <label for="file-input-tfms" class="browse-button" onclick="document.getElementById('file-input-tfms').click()">Choose File</label>
+            <input type="file" id="file-input-tfms" onchange="displayFileName('file-input-tfms', 'file-name-tfms')" style="display:none" />
+        </div>
+
+        <button class="action-button" onclick="calculateTotalBookingHours()">Booking Hours</button>
+
+        <!-- Display result below Calculate button -->
+        <div id="result-booking"></div>
+    </div>
+
+    <!-- Second Box - WBU File -->
+    <div class="box light-blue-box">
+        <h2 style="font-weight: bold; font-size: 25px;">WBU File</h2>
+
+        <div class="file-input-container">
+            <input type="text" id="file-name-wbu" class="file-name" readonly placeholder="No file selected">
+            <label for="file-input-wbu" class="browse-button" onclick="document.getElementById('file-input-wbu').click()">Choose File</label>
+            <input type="file" id="file-input-wbu" onchange="displayFileName('file-input-wbu', 'file-name-wbu')" style="display:none" />
+        </div>
+
+        <button class="action-button" onclick="displayTotalUtilizedHours()">Utilization Hours</button>
+
+        <!-- Display result below Display button -->
+        <div id="result-utilized"></div>
+    </div>
+
+    <button class="green-button" onclick="plotData()">Plot Data</button>
+    <!-- New Difference button -->
+    <button class="green-button" onclick="calculateDifference()">Difference</button>
+    <!-- New div for displaying the difference -->
+<div id="difference-result" style="margin-top: 10px; font-size: 18px;"></div>
+    <div id="chart-container">
+        <canvas id="plot-chart"></canvas>
+    </div>
+    <div id="result"></div>
+
+    <!-- New Download button -->
+    <button class="download-button" onclick="downloadData()">Download</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <script>
+        function displayFileName(inputId, displayId) {
+            var fileInput = document.getElementById(inputId);
+            var fileNameDisplay = document.getElementById(displayId);
+            fileNameDisplay.value = fileInput.files[0] ? fileInput.files[0].name : "No file selected";
+        }
+
+        function displayTotalUtilizedHours() {
+            var wbuFileInput = document.getElementById('file-input-wbu');
+            var wbuFile = wbuFileInput.files[0];
+
+            if (!wbuFile) {
+                alert('Please upload the WBU file.');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('wbu_file', wbuFile);
+
+            fetch('', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.total_utilized_hours !== null) {
+                    document.getElementById('result-utilized').textContent = "Total Utilized Hours is: " + data.total_utilized_hours.toFixed(2);
+                } else {
+                    alert('Error calculating total utilized hours.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function calculateTotalBookingHours() {
+            var tfmsFileInput = document.getElementById('file-input-tfms');
+            var tfmsFile = tfmsFileInput.files[0];
+
+            if (!tfmsFile) {
+                alert('Please upload the TFMS file.');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('tfms_file', tfmsFile);
+
+            fetch('', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.total_booking_hours !== null) {
+                    document.getElementById('result-booking').textContent = "Total Booking Hours is: " + data.total_booking_hours.toFixed(2);
+                } else {
+                    alert('Error calculating total booking hours.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function plotData() {
+            var tfmsFileInput = document.getElementById('file-input-tfms');
+            var wbuFileInput = document.getElementById('file-input-wbu');
+    
+            // Check if both files are uploaded
+            if (!tfmsFileInput.files[0] || !wbuFileInput.files[0]) {
+                alert('Please upload both TFMS and WBU files for plotting.');
+                return;
+            }
+    
+            var formDataTFMS = new FormData();
+            var formDataWBU = new FormData();
+    
+            formDataTFMS.append('tfms_file', tfmsFileInput.files[0]);
+            formDataWBU.append('wbu_file', wbuFileInput.files[0]);
+    
+            fetch('', {  // Assuming your URL for the upload_file view is ''
+                method: 'POST',
+                body: formDataTFMS
+            })
+            .then(response => response.json())
+            .then(dataTFMS => {
+                if (dataTFMS.total_booking_hours !== null) {
+                    fetch('', {  // Assuming your URL for the upload_file view is ''
+                        method: 'POST',
+                        body: formDataWBU
+                    })
+                    .then(response => response.json())
+                    .then(dataWBU => {
+                        if (dataWBU.total_utilized_hours !== null) {
+                            // Create a bar graph
+                            var ctx = document.getElementById('plot-chart').getContext('2d');
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: ['Total TFMS Booked Hours', 'Total WBU Utilized Hours'],
+                                    datasets: [{
+                                        label: 'TFMS',
+                                        backgroundColor: '#007BFF',
+                                        data: [dataTFMS.total_booking_hours, 0]  // TFMS data for Total Booked, 0 for Total Utilized
+                                    }, {
+                                        label: 'WBU',
+                                        backgroundColor: '#00CED1',
+                                        data: [0, dataWBU.total_utilized_hours]  // 0 for Total Booked, WBU data for Total Utilized
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            title: {
+                                                display: true,
+                                                text: 'Number of Hours',  // Set Y-axis label
+                                                fontSize: 20,  // Set the font size for Y-axis label
+                                                fontWeight: 'bold'  // Make the Y-axis label bold
+                                            }
+                                        }
+                                    },
+                                    plugins: {
+                                        legend: {
+                                            labels: {
+                                                fontSize: 20,
+                                                fontWeight: 'bold'
+                                            }
+                                        }
+                                    }
+
+                                }
+                            });
+                            // Show the chart container
+                        document.getElementById('chart-container').style.display = 'block';
+                        } else {
+                            alert('Error retrieving WBU data for plotting.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    alert('Error retrieving TFMS data for plotting.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function calculateDifference() {
+            var tfmsFileInput = document.getElementById('file-input-tfms');
+            var wbuFileInput = document.getElementById('file-input-wbu');
+        
+            var tfmsFile = tfmsFileInput.files[0];
+            var wbuFile = wbuFileInput.files[0];
+        
+            if (!tfmsFile || !wbuFile) {
+                alert('Please upload both TFMS and WBU files.');
+                return;
+            }
+        
+            var formDataTFMS = new FormData();
+            var formDataWBU = new FormData();
+        
+            formDataTFMS.append('tfms_file', tfmsFile);
+            formDataWBU.append('wbu_file', wbuFile);
+        
+            fetch('', {
+                method: 'POST',
+                body: formDataTFMS
+            })
+            .then(response => response.json())
+            .then(dataTFMS => {
+                if (dataTFMS.total_booking_hours !== null) {
+                    fetch('', {
+                        method: 'POST',
+                        body: formDataWBU
+                    })
+                    .then(response => response.json())
+                    .then(dataWBU => {
+                        if (dataWBU.total_utilized_hours !== null) {
+                            var difference = Math.abs(dataTFMS.total_booking_hours - dataWBU.total_utilized_hours);
+        
+                            // Check if the difference is a valid number
+                            if (!isNaN(difference)) {
+                                // Update the content of the difference result div
+                                document.getElementById('difference-result').textContent = "Difference is: " + difference.toFixed(2) + " hours";
+                            } else {
+                                alert('Error calculating difference. Please check your data.');
+                            }
+                        } else {
+                            alert('Error calculating total utilized hours for WBU.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    alert('Error calculating total booking hours for TFMS.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        
+        function downloadData() {
+            var labcar = document.getElementById('labcar-selector').value;
+            var startDate = document.getElementById('start-date').value;
+            var endDate = document.getElementById('end-date').value;
+            var month = document.getElementById('month-selector').value;
+            var totalBookingHours = parseFloat(document.getElementById('result-booking').textContent.match(/\d+\.\d+/)[0]);
+            var totalUtilizedHours = parseFloat(document.getElementById('result-utilized').textContent.match(/\d+\.\d+/)[0]);
+        
+            // Create a worksheet with the data
+            var worksheet = XLSX.utils.aoa_to_sheet([
+                ["Labcar", "Date Range", "Month", "Total Booking Hours", "Total Utilized Hours"],
+                [labcar, `${startDate} to ${endDate}`, month, totalBookingHours, totalUtilizedHours]
+            ]);
+        
+            // Create a workbook and add the worksheet
+            var workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Utilization Data");
+        
+            // Save the workbook to a file
+            var filename = "utilization_data.xlsx";
+            XLSX.writeFile(workbook, filename);
+        
+            // Optional: Show an alert with the data
+            var downloadMessage = `
+                Labcar: ${labcar}
+                Date Range: ${startDate} to ${endDate}
+                Month: ${month}
+                Total Booking Hours: ${totalBookingHours}
+                Total Utilized Hours: ${totalUtilizedHours}
+            `;
+        
+            alert(downloadMessage);
+        }
+        
+    </script>
+</body>
+</html>

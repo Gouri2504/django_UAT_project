@@ -1,0 +1,26 @@
+body {
+    /* ... Your existing body styles ... */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.header-container {
+    text-align: center;
+}
+
+.logo {
+    /* Add any necessary styles for your logo */
+    max-width: 100px; /* Adjust the max-width as needed */
+    max-height: 100px; /* Adjust the max-height as needed */
+}
+
+h1 {
+    font-size: 70px;
+    font-weight: bold;
+    margin-top: 5px;
+    color: #33042E;
+}

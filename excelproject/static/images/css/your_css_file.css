@@ -1,0 +1,19 @@
+/* static/css/your_css_file.css */
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    position: relative;
+    padding: 20px;
+}
+
+.logo {
+    width: 100px; /* Adjust the width as needed */
+    height: auto;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}

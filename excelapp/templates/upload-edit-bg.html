@@ -1,0 +1,621 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilization Analytic Tool</title>
+    <link rel="stylesheet" href="{% static 'your_css_file.css' %}">
+    <style>
+        body {
+            background-color: #F0F4F8;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            color : #2C040A;
+        }
+
+        h1 {
+            font-size: 70px;
+            font-weight: bold;
+            margin-top: 5px;
+            color:#33042E;
+        }
+
+        .box {
+            
+                margin-top: 10px;
+                margin-left: 20;
+                margin-right: 20;
+                padding: 5px;
+                border-radius: 0px;
+                text-align: left;
+            
+            }
+        
+
+        .cyan-box {
+            background-color: #F0F4F8;
+            
+        }
+
+        .light-blue-box {
+            background-color: #F0F4F8;
+        }
+
+        .green-button {
+            background-color: maroon;
+            color: white;
+            padding: 10px 20px;
+            font-size: 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        .download-button {
+            background-color: lightgrey;
+            color: blue;
+            padding: 10px;
+            border: solid 1px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .file-name {
+            flex-grow: 1;
+            padding: 5px;
+        }
+
+        .browse-button {
+            background-color: #D35400 ;
+            color: white;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .action-button {
+            background-color: #33042E;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size:15px;
+        }
+
+        #result {
+            margin-top: 10px;
+            font-size: 18px;
+            color: red;
+        }
+
+        #result-booking,
+        #result-utilized {
+            margin-top: 15px;
+            font-size: 20px;
+            font-family:"Arial",'Helvetica';
+            color: red;
+            font-weight: bold;
+        }
+        #difference-result{
+            font-size:20px;
+            color: red;
+            font-weight:bold;
+        }
+        
+        /* New styles for date selectors and dropdowns */
+        .date-selector,
+        #labcar-selector,
+        #month-selector {
+            margin-top: 1px;
+            margin-right: 10px;
+            padding: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            font-family:"Arial",'Helvetica';
+        }
+    </style>
+</head>
+<body style="background-image: url('{% static 'images/bg.jpg' %}'); background-size: cover;">
+    <div class="header-container">
+        <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="logo">
+        <h1>Utilization Analytic Tool</h1>
+    </div>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+   
+
+    <!-- New Dropdown for Labcar names -->
+    <select id="labcar-selector" class="date-selector">
+      
+        <option value="LCPT01">LCPT BAN 01</option>
+        <option value="LCPT02">LCPT BAN 02</option>
+        <option value="LCPT03">LCPT BAN 03</option>
+        <option value="LCPT04">LCPT BAN 04</option>
+        <option value="LCPT05">LCPT BAN 05</option>
+        <option value="LCPT06">LCPT BAN 06</option>
+        <option value="LCPT07">LCPT BAN 07</option>
+        <option value="LCPT08">LCPT BAN 08</option>
+        <option value="LCPT09">LCPT BAN 09</option>
+        <option value="LCPT10">LCPT BAN 10</option>
+        <option value="LCPT11">LCPT BAN 11</option>
+        <option value="LCPT12">LCPT BAN 12</option>        
+        <option value="LCPT14">LCPT BAN 14</option>
+        <option value="LCPT15">LCPT BAN 15</option>
+        <option value="LCPT16">LCPT BAN 16</option>
+        <option value="LCPT17">LCPT BAN 17</option>
+        <option value="LCPT18">LCPT BAN 18</option>
+        <option value="LCPT19">LCPT BAN 19</option>
+        <option value="LCPT20">LCPT BAN 20</option>
+        <option value="LCPT21">LCPT BAN 21</option>
+        <option value="LCPT22">LCPT BAN 22</option>
+        <option value="LCPT23">LCPT BAN 23</option>
+        <option value="LCPT24">LCPT BAN 24</option>
+        <option value="LCPT25">LCPT BAN 25</option>
+        <option value="LCPT26">LCPT BAN 26</option>
+        <option value="LCPT27">LCPT BAN 27</option>
+        <option value="LCPT28">LCPT BAN 28</option>
+        <option value="LCPT29">LCPT BAN 29</option>
+        <option value="LCPT30">LCPT BAN 30</option>
+        <option value="LCPT31">LCPT BAN 31</option>
+        <option value="LCPT32">LCPT BAN 32</option>
+        <option value="LCPT33">LCPT BAN 33</option>
+        <option value="LCPT34">LCPT BAN 34</option>       
+        <option value="LCPT36">LCPT BAN 36</option>
+        <option value="LCPT37">LCPT BAN 38</option>
+        <option value="LCPT39">LCPT BAN 39</option>
+        <option value="LCPT40">LCPT BAN 40</option>
+        <option value="LCPT41">LCPT BAN 41</option>
+        <option value="LCPT42">LCPT BAN 42</option>
+        <option value="LCPT43">LCPT BAN 43</option>
+        <option value="LCPT44">LCPT BAN 44</option>
+        <option value="LCPT45">LCPT BAN 45</option>
+        <option value="LCPT46">LCPT BAN 46</option>
+        <option value="LCPT47">LCPT BAN 47</option>
+        <option value="LCPT48">LCPT BAN 48</option>
+        <option value="LCPT49">LCPT BAN 49</option>
+        <option value="LCPT50">LCPT BAN 50</option>
+        <option value="LCPT51">LCPT BAN 51</option>
+        <option value="LCPT52">LCPT BAN 52</option>
+        <option value="LCPT53">LCPT BAN 53</option>
+        <option value="LCPT54">LCPT BAN 54</option>
+        <option value="LCPT56">LCPT BAN 56</option>
+        <option value="LCPT57">LCPT BAN 57</option>
+        <option value="LCPT58">LCPT BAN 58</option>
+        <option value="LCPT59">LCPT BAN 59</option>
+        <option value="LCPT60">LCPT BAN 60</option>
+        <option value="LCPT61">LCPT BAN 61</option>
+        <option value="LCPT62">LCPT BAN 62</option>
+        <option value="LCPT63">LCPT BAN 63</option>
+        <option value="LCPT64">LCPT BAN 64</option>
+        <option value="LCPT65">LCPT BAN 65</option>
+        <option value="LCPT66">LCPT BAN 66</option>
+        <option value="LCPT67">LCPT BAN 67</option>
+        <option value="LCPT68">LCPT BAN 68</option>
+        <option value="LCPT69">LCPT BAN 69</option>
+        <option value="LCPT70">LCPT BAN 70</option>
+        <option value="LCPT71">LCPT BAN 71</option>
+       
+        <option value="LCPTCOB1">LCPT COB 1 </option>
+        <option value="LCPTCOB2">LCPT COB 2</option>
+        <option value="LCPTCOB3">LCPT COB 3</option>
+        <option value="LCPTCOB4">LCPT COB 4</option>
+        <option value="LCPTCOB5">LCPT COB 5 </option>
+        <option value="LCPTCOB6">LCPT COB 6</option>
+        <option value="LCPTCOB7">LCPT COB 7</option>
+        <option value="LCPTCOB8">LCPT COB 8</option>
+        <option value="LCPTCOB9">LCPT COB 9 </option>
+        <option value="LCPTCOB10">LCPT COB 10</option>
+        <option value="LCPTCOB11">LCPT COB 11</option>
+        <option value="LCPTCOB12">LCPT COB 12</option>
+        <option value="LCPTCOB13">LCPT COB 13 </option>
+        <option value="LCPTCOB14">LCPT COB 14</option>
+        <option value="LCPTCOB15">LCPT COB 15</option>
+        <option value="LCPTCOB16">LCPT COB 16</option>
+        <option value="LCPTCOB17">LCPT COB 17 </option>
+        <option value="LCPTCOB18">LCPT COB 18</option>
+        <option value="LCPTCOB19">LCPT COB 19</option>
+        <option value="LCPTCOB20">LCPT COB 20</option>
+        <option value="LCPTCOB21">LCPT COB 21</option>
+        <option value="LCPTCOB22">LCPT COB 22</option>
+        <option value="LCPTCOB23">LCPT COB 23 </option>
+        <option value="LCPTCOB24">LCPT COB 24</option>
+        <option value="LCPTCOB25">LCPT COB 25</option>
+        <option value="LCPTCOB26">LCPT COB 26</option>
+        <option value="LCPTCOB27">LCPT COB 27</option>
+        <option value="LCPTCOB28">LCPT COB 28</option>
+        <option value="LCPTCOB29">LCPT COB 29 </option>
+        <option value="LCPTCOB30">LCPT COB 30</option>
+        <option value="LCPTCOB31">LCPT COB 31</option>
+        <option value="LCPTCOB32">LCPT COB 32</option>
+        <option value="LCPTCOB33">LCPT COB 33</option>
+        <option value="LCPTCOB34">LCPT COB 34</option>
+        <option value="LCPTCOB35">LCPT COB 35 </option>
+        <option value="LCPTCOB36">LCPT COB 36</option>
+        <option value="LCPTCOB37">LCPT COB 37</option>
+        <option value="LCPTCOB38">LCPT COB 38</option>
+        <option value="LCPTCOB39">LCPT COB 39</option>
+        <option value="LCPTCOB40">LCPT COB 40</option>
+        <option value="LCPTCOB41">LCPT COB 41 </option>
+        <option value="LCPTCOB42">LCPT COB 42</option>
+        <option value="LCPTCOB43">LCPT COB 43</option>
+        <option value="LCPTCOB44">LCPT COB 44</option>
+        <option value="LCPTCOB45">LCPT COB 45</option>
+        <option value="LCPTCOB46">LCPT COB 46 </option>
+        <option value="LCPTCOB47">LCPT COB 47</option>
+        <option value="LCPTCOB48">LCPT COB 48</option>
+        <option value="LCPTCOB49">LCPT COB 49</option>
+        <option value="LCPTCOB50">LCPT COB 50</option>
+        <option value="LCPTCOB51">LCPT COB 51 </option>
+        <option value="LCPTCOB52">LCPT COB 52</option>
+        <option value="LCPTCOB53">LCPT COB 53</option>
+        <option value="LCPTCOB54">LCPT COB 54</option>
+        <!-- Add more labcars as needed -->
+    </select>
+
+    <!-- New Date Range Selector -->
+    <input type="date" id="start-date" class="date-selector" placeholder="Start Date">
+    <input type="date" id="end-date" class="date-selector" placeholder="End Date">
+
+    <!-- New Dropdown for Months -->
+    <select id="month-selector" class="date-selector">
+        <option value="Monthly">One Month</option>
+        <option value="Quarterly">3 Months</option>
+        <option value="Half Yealy">6 Months</option>
+        <option value="Annaly">One Year</option>
+        
+    </select>
+
+    <!-- First Box - TFMS File -->
+    <div class="box cyan-box">
+        <h2 style="font-weight: bold; font-size: 30px;">Upload TFMS Data</h2>
+
+        <div class="file-input-container">
+            <input type="text" id="file-name-tfms" class="file-name" readonly placeholder="No file selected">
+            <label for="file-input-tfms" class="browse-button" onclick="document.getElementById('file-input-tfms').click()">Choose File</label>
+            <input type="file" id="file-input-tfms" onchange="displayFileName('file-input-tfms', 'file-name-tfms')" style="display:none" />
+        </div>
+
+        <button class="action-button" onclick="calculateTotalBookingHours()">Booking Hours</button>
+
+        <!-- Display result below Calculate button -->
+        <div id="result-booking"></div>
+    </div>
+
+    <!-- Second Box - WBU File -->
+    <div class="box light-blue-box">
+        <h2 style="font-weight: bold; font-size: 30px;">Upload WBU Data</h2>
+
+        <div class="file-input-container">
+            <input type="text" id="file-name-wbu" class="file-name" readonly placeholder="No file selected">
+            <label for="file-input-wbu" class="browse-button" onclick="document.getElementById('file-input-wbu').click()">Choose File</label>
+            <input type="file" id="file-input-wbu" onchange="displayFileName('file-input-wbu', 'file-name-wbu')" style="display:none" />
+        </div>
+
+        <button class="action-button" onclick="displayTotalUtilizedHours()">Utilization Hours</button>
+
+        <!-- Display result below Display button -->
+        <div id="result-utilized"></div>
+    </div>
+
+    <button class="green-button" onclick="plotData()">Plot Data</button>
+    <!-- New Difference button -->
+    <button class="green-button" onclick="calculateDifference()">Difference</button>
+    <!-- New div for displaying the difference -->
+<div id="difference-result" style="margin-top: 10px; font-size: 18px;"></div>
+    <div id="chart-container">
+        <canvas id="plot-chart"></canvas>
+    </div>
+    <div id="result"></div>
+
+    <!-- New Download button -->
+    <button class="download-button" onclick="downloadData()">Download Data</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <script>
+        function displayFileName(inputId, displayId) {
+            var fileInput = document.getElementById(inputId);
+            var fileNameDisplay = document.getElementById(displayId);
+            fileNameDisplay.value = fileInput.files[0] ? fileInput.files[0].name : "No file selected";
+        }
+
+        function displayTotalUtilizedHours() {
+            var wbuFileInput = document.getElementById('file-input-wbu');
+            var wbuFile = wbuFileInput.files[0];
+
+            if (!wbuFile) {
+                alert('Please upload the WBU file.');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('wbu_file', wbuFile);
+
+            fetch('', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.total_utilized_hours !== null) {
+                    document.getElementById('result-utilized').textContent = "Total Utilized Hours is: " + data.total_utilized_hours.toFixed(2);
+                } else {
+                    alert('Error calculating total utilized hours.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function calculateTotalBookingHours() {
+            var tfmsFileInput = document.getElementById('file-input-tfms');
+            var tfmsFile = tfmsFileInput.files[0];
+
+            if (!tfmsFile) {
+                alert('Please upload the TFMS file.');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('tfms_file', tfmsFile);
+
+            fetch('', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.total_booking_hours !== null) {
+                    document.getElementById('result-booking').textContent = "Total Booking Hours is: " + data.total_booking_hours.toFixed(2);
+                } else {
+                    alert('Error calculating total booking hours.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function plotData() {
+            var tfmsFileInput = document.getElementById('file-input-tfms');
+            var wbuFileInput = document.getElementById('file-input-wbu');
+    
+            // Check if both files are uploaded
+            if (!tfmsFileInput.files[0] || !wbuFileInput.files[0]) {
+                alert('Please upload both TFMS and WBU files for plotting.');
+                return;
+            }
+    
+            var formDataTFMS = new FormData();
+            var formDataWBU = new FormData();
+    
+            formDataTFMS.append('tfms_file', tfmsFileInput.files[0]);
+            formDataWBU.append('wbu_file', wbuFileInput.files[0]);
+    
+            fetch('', {  // Assuming your URL for the upload_file view is ''
+                method: 'POST',
+                body: formDataTFMS
+            })
+            .then(response => response.json())
+            .then(dataTFMS => {
+                if (dataTFMS.total_booking_hours !== null) {
+                    fetch('', {  // Assuming your URL for the upload_file view is ''
+                        method: 'POST',
+                        body: formDataWBU
+                    })
+                    .then(response => response.json())
+                    .then(dataWBU => {
+                        if (dataWBU.total_utilized_hours !== null) {
+                            // Create a bar graph
+                            var ctx = document.getElementById('plot-chart').getContext('2d');
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: ['Total TFMS Booked Hours', 'Total WBU Utilized Hours'],
+                                    datasets: [{
+                                        label: 'TFMS Booking Hours',
+                                        
+                                        backgroundColor: '#850585',
+                                        data: [dataTFMS.total_booking_hours, 0]  // TFMS data for Total Booked, 0 for Total Utilized
+                                    }, {
+                                        label: 'WBU Utilized Hours',
+                                        backgroundColor: '#0b5797',
+                                        
+                                        data: [0, dataWBU.total_utilized_hours]  // 0 for Total Booked, WBU data for Total Utilized
+                                    }]
+                                },
+                                options: {
+                                   
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            title: {
+                                                display: true,
+                                                text: 'Number of Hours',  // Set Y-axis label
+                                                fontSize: 20,  // Set the font size for Y-axis label
+                                                fontWeight: 'bold',  // Make the Y-axis label bold
+                                            },
+                                            min: 0,        // Set the minimum value for the Y-axis
+                                            max: 40,
+                                            ticks:{
+                                                stepSize: 2
+                                            }       // Set the maximum value for the Y-axis
+                                                // Set the interval for the Y-axis
+                                        }
+                                        
+                                },
+                                    plugins: {
+                                        legend: {
+                                            labels: {
+                                                fontSize: 20,
+                                                fontWeight: 'bold'
+                                            }
+                                        }
+                                    }
+
+                                }
+                            });
+                            // Show the chart container
+                        //document.getElementById('chart-container').style.display = 'block';
+                        var chartContainer = document.getElementById('chart-container');
+                        chartContainer.style.display = 'block';
+                        chartContainer.style.border = '2px solid red'; // Red border
+                        chartContainer.style.backgroundColor = '#d3d3d3'; // Grey background
+                         
+                        } else {
+                            alert('Error retrieving WBU data for plotting.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    alert('Error retrieving TFMS data for plotting.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+      
+    
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function calculateDifference() {
+            var tfmsFileInput = document.getElementById('file-input-tfms');
+            var wbuFileInput = document.getElementById('file-input-wbu');
+        
+            var tfmsFile = tfmsFileInput.files[0];
+            var wbuFile = wbuFileInput.files[0];
+        
+            if (!tfmsFile || !wbuFile) {
+                alert('Please upload both TFMS and WBU files.');
+                return;
+            }
+        
+            var formDataTFMS = new FormData();
+            var formDataWBU = new FormData();
+        
+            formDataTFMS.append('tfms_file', tfmsFile);
+            formDataWBU.append('wbu_file', wbuFile);
+        
+            fetch('', {
+                method: 'POST',
+                body: formDataTFMS
+            })
+            .then(response => response.json())
+            .then(dataTFMS => {
+                if (dataTFMS.total_booking_hours !== null) {
+                    fetch('', {
+                        method: 'POST',
+                        body: formDataWBU
+                    })
+                    .then(response => response.json())
+                    .then(dataWBU => {
+                        if (dataWBU.total_utilized_hours !== null) {
+                            var difference = Math.abs(dataTFMS.total_booking_hours - dataWBU.total_utilized_hours);
+        
+                            // Check if the difference is a valid number
+                            if (!isNaN(difference)) {
+                                // Update the content of the difference result div
+                                document.getElementById('difference-result').textContent = "Difference is: " + difference.toFixed(2) + " hours";
+                            } else {
+                                alert('Error calculating difference. Please check your data.');
+                            }
+                        } else {
+                            alert('Error calculating total utilized hours for WBU.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    alert('Error calculating total booking hours for TFMS.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        
+        function downloadData() {
+            var labcar = document.getElementById('labcar-selector').value;
+            var startDate = document.getElementById('start-date').value;
+            var endDate = document.getElementById('end-date').value;
+            var month = document.getElementById('month-selector').value;
+            var totalBookingHours = parseFloat(document.getElementById('result-booking').textContent.match(/\d+\.\d+/)[0]);
+            var totalUtilizedHours = parseFloat(document.getElementById('result-utilized').textContent.match(/\d+\.\d+/)[0]);
+            var difference = parseFloat(document.getElementById('difference-result').textContent.match(/\d+\.\d+/)[0]);
+        
+            // Create a worksheet with the data
+            var worksheet = XLSX.utils.aoa_to_sheet([
+                ["Labcar Name", "Date", "Period", "Total Booking Hours", "Total Utilized Hours","Difference in Hours"],
+                [labcar, `${startDate} to ${endDate}`, month, totalBookingHours, totalUtilizedHours,difference]
+            ]);
+            
+            // Create a workbook and add the worksheet
+            var workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Utilization Data");
+        
+            // Save the workbook to a file
+            var filename = "utilization_analytic_data.xlsx";
+            XLSX.writeFile(workbook, filename);
+        
+            // Optional: Show an alert with the data
+            var downloadMessage = `
+                Labcar Name: ${labcar}
+                Date: ${startDate} to ${endDate}
+                Period: ${month}
+                Total Booking Hours: ${totalBookingHours}
+                Total Utilized Hours: ${totalUtilizedHours}
+                Difference: ${difference}
+            `;
+        
+            alert(downloadMessage);
+        }
+        
+    </script>
+</body>
+</html>
